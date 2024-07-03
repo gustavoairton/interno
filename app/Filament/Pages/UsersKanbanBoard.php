@@ -96,6 +96,8 @@ class UsersKanbanBoard extends KanbanBoard
     {
 
         $lead = Lead::find($recordId);
+
         $lead->update(['status' => $status]);
+        Notification::make()->success()->title('Estado do Lead alterado para ' . $status . '.')->send();
     }
 }
