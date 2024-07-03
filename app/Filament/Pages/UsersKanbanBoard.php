@@ -94,5 +94,8 @@ class UsersKanbanBoard extends KanbanBoard
 
     public function onStatusChanged(int $recordId, string $status, array $fromOrderedIds, array $toOrderedIds): void
     {
+
+        $lead = Lead::find($recordId);
+        $lead->update(['status' => $status]);
     }
 }
