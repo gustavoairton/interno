@@ -6,6 +6,7 @@ use App\Filament\Resources\SaleResource\Pages;
 use App\Filament\Resources\SaleResource\RelationManagers;
 use App\Filament\Resources\SaleResource\RelationManagers\ReceiptsRelationManager;
 use App\Models\Sale;
+use App\Models\User;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -24,6 +25,13 @@ class SaleResource extends Resource
     protected static ?string $navigationIcon = 'heroicon-o-banknotes';
     protected static ?string $label = 'Venda';
     protected static ?string $navigationGroup = 'Financeiro';
+
+    public static function canViewAny(): bool
+    {
+        $user = User::find(auth()->user()->id);
+        return $user->hasPermission('venda');
+    }
+
 
     public static function form(Form $form): Form
     {

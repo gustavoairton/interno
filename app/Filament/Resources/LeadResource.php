@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\LeadResource\Pages;
 use App\Filament\Resources\LeadResource\RelationManagers;
 use App\Models\Lead;
+use App\Models\User;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -24,6 +25,13 @@ class LeadResource extends Resource
     protected static ?string $navigationIcon = 'heroicon-o-user-group';
     protected static ?string $navigationGroup = 'Leads';
     protected static ?string $navigationLabel = 'Tabela';
+
+    public static function canViewAny(): bool
+    {
+        $user = User::find(auth()->user()->id);
+        return $user->hasPermission('comercial');
+    }
+
 
 
     public static function form(Form $form): Form

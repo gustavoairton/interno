@@ -22,6 +22,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'user_level'
     ];
 
     /**
@@ -42,6 +43,20 @@ class User extends Authenticatable
     public function leads(): HasMany
     {
         return $this->hasMany(Lead::class);
+    }
+
+    public function permissions(): HasMany
+    {
+        return $this->hasMany(UserPermission::class);
+    }
+
+    public function hasPermission(string $permission): bool
+    {
+
+        $all = UserPermission::where('user_id', $this->id)->where('permission', '*')->exists();
+        if ($all) return true;
+
+        return UserPermission::where('user_id', $this->id)->where('permission', $permission)->exists();
     }
 
     /**

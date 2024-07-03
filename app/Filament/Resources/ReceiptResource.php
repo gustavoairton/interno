@@ -6,6 +6,7 @@ use Akaunting\Money\View\Components\Money;
 use App\Filament\Resources\ReceiptResource\Pages;
 use App\Filament\Resources\ReceiptResource\RelationManagers;
 use App\Models\Receipt;
+use App\Models\User;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -23,6 +24,13 @@ class ReceiptResource extends Resource
     protected static ?string $label = 'Fatura';
     protected static ?string $navigationIcon = 'heroicon-o-currency-dollar';
     protected static ?bool $readOnly = true;
+
+    public static function canViewAny(): bool
+    {
+        $user = User::find(auth()->user()->id);
+        return $user->hasPermission('recebimento');
+    }
+
 
     public static function form(Form $form): Form
     {

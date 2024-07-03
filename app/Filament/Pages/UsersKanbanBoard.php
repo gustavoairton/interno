@@ -9,6 +9,7 @@ use Filament\Notifications\Notification;
 use Illuminate\Support\Collection;
 use Mokhosh\FilamentKanban\Pages\KanbanBoard;
 use App\Filament\Resources\LeadResource\Pages;
+use App\Models\User;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -30,6 +31,13 @@ class UsersKanbanBoard extends KanbanBoard
     protected string $editModalTitle = 'Editar Lead';
     protected string $editModalCancelButtonLabel = 'Cancelar';
     protected string $editModalSaveButtonLabel = 'Salvar';
+
+    public static function canAccess(): bool
+    {
+        $user = User::find(auth()->user()->id);
+        return $user->hasPermission('comercial');
+    }
+
 
     protected static ?string $navigationIcon = 'heroicon-o-queue-list';
 
