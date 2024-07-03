@@ -11,8 +11,6 @@ use Flowframe\Trend\TrendValue;
 class SalesChart extends ChartWidget
 {
     protected static ?string $heading = 'Vendas';
-    protected static ?string $description = 'Referência: Este ano.';
-
     protected function getData(): array
     {
 
@@ -31,7 +29,7 @@ class SalesChart extends ChartWidget
                     'label' => 'Valor em Vendas',
                     'data' => $data->map(fn (TrendValue $value) => $value->aggregate),
 
-                    ],
+                ],
             ],
             'labels' => $data->map(fn (TrendValue $value) => $value->date),
         ];
@@ -55,7 +53,7 @@ class SalesChart extends ChartWidget
             scales: {
                 y: {
                     ticks: {
-                        callback: (value) => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'BRL'}).format(value),
+                        callback: (value) => new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL'}).format(value),
                     },
                 },
             },
