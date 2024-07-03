@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\UserResource\RelationManagers;
 
+use App\Enums\Permissions;
 use App\Models\Receipt;
 use App\Models\Sale;
 use Faker\Provider\ar_EG\Text;
@@ -35,12 +36,7 @@ class PermissionRelationManager extends RelationManager
     {
         return $form
             ->schema([
-                Select::make('permission')->label('Permissão')->required()->options([
-                    'venda' => 'Vendas',
-                    'recebimento' => 'Recebimentos',
-                    'comercial' => 'Comercial',
-                    'colaboradores' => 'Colaboradores',
-                ]),
+                Select::make('permission')->label('Permissão')->required()->options(Permissions::enumPermissions),
             ]);
     }
 
@@ -58,7 +54,8 @@ class PermissionRelationManager extends RelationManager
         return $table
             ->recordTitleAttribute('id')
             ->columns([
-                Tables\Columns\TextColumn::make('permission')->label('Permissão'),
+                Tables\Columns\TextColumn::make('permission')->label('Permissão')->badge(),
+                Tables\Columns\TextColumn::make('created_at')->label('Adicionada em')->dateTime(),
             ])
             ->filters([
                 //

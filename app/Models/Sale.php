@@ -11,8 +11,14 @@ class Sale extends Model
     protected $fillable = [
         'lead_id',
         'user_id',
+        'service_id',
         'value'
     ];
+
+    public function service(): BelongsTo
+    {
+        return $this->belongsTo(Service::class);
+    }
 
     public function lead(): BelongsTo
     {

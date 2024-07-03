@@ -6,11 +6,13 @@ use App\Filament\Resources\SaleResource\Pages;
 use App\Filament\Resources\SaleResource\RelationManagers;
 use App\Filament\Resources\SaleResource\RelationManagers\ReceiptsRelationManager;
 use App\Models\Sale;
+use App\Models\Service;
 use App\Models\User;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Leandrocfe\FilamentPtbrFormFields\Money;
 use Illuminate\Database\Eloquent\Builder;
@@ -43,6 +45,11 @@ class SaleResource extends Resource
                 Forms\Components\Select::make('user_id')
                     ->relationship('user', 'name')
                     ->required(),
+                Forms\Components\Select::make('service_id')
+                    ->relationship('service', 'name')
+                    ->label('Serviço')
+                    ->required(),
+
                 Money::make('value')
 
             ]);
@@ -59,6 +66,7 @@ class SaleResource extends Resource
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('value')->label('Valor')->money('BRL'),
+                Tables\Columns\TextColumn::make('service.name')->label('Serviço')->sortable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
@@ -69,7 +77,8 @@ class SaleResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                //
+                SelectFilter::make('service_id')->label('Serviço')->options(fn () => Service::pluck('name', 'id')),
+                SelectFilter::make('user_id')->label('Colaborador')->options(fn () => User::pluck('name', 'id')),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
