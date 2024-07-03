@@ -94,13 +94,5 @@ class UsersKanbanBoard extends KanbanBoard
 
     public function onStatusChanged(int $recordId, string $status, array $fromOrderedIds, array $toOrderedIds): void
     {
-
-        $lead = Lead::find($recordId);
-        if ($status == 'Negócio Fechado' && !$lead->value) {
-            Notification::make()->danger()->title('Adicione um valor ao Lead para fechar um negócio.')->send();
-        } else {
-            $lead->update(['status' => $status]);
-            Notification::make()->success()->title('Estado do Lead alterado para ' . $status . '.')->send();
-        }
     }
 }
