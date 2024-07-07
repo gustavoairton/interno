@@ -19,6 +19,7 @@ use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Leandrocfe\FilamentPtbrFormFields\Money;
 use Notification;
+use Webbingbrasil\FilamentCopyActions\Tables\Actions\CopyAction;
 
 class ReceiptsRelationManager extends RelationManager
 {
@@ -36,6 +37,10 @@ class ReceiptsRelationManager extends RelationManager
                     ->label('Valor')
                     ->required()
                     ->maxLength(255),
+                Forms\Components\Select::make('type')->label('Tipo')->options([
+                    'Cartão de Crédito' => 'Cartão de Crédito',
+                    'PIX' => 'PIX',
+                ]),
             ]);
     }
 
@@ -75,6 +80,7 @@ class ReceiptsRelationManager extends RelationManager
                 }),
             ])
             ->actions([
+                CopyAction::make()->label('Copiar link de pagamento')->copyable(fn (Receipt $receipt) => $receipt->link),
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
             ])

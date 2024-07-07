@@ -15,13 +15,15 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Leandrocfe\FilamentPtbrFormFields\Money as FilamentPtbrFormFieldsMoney;
+use Webbingbrasil\FilamentCopyActions\Tables\Actions\CopyAction;
 
 class ReceiptResource extends Resource
 {
     protected static ?string $model = Receipt::class;
     protected static ?string $navigationGroup = 'Financeiro';
-    protected static ?string $navigationLabel = 'Recebimentos';
+    protected static ?string $navigationLabel = 'Faturas';
     protected static ?string $label = 'Fatura';
+    protected static ?string $pluralLabel = 'Faturas';
     protected static ?string $navigationIcon = 'heroicon-o-currency-dollar';
     protected static ?bool $readOnly = true;
 
@@ -67,6 +69,8 @@ class ReceiptResource extends Resource
             ])
             ->actions([
                 Tables\Actions\ViewAction::make()->color('success'),
+                CopyAction::make()->label('Copiar link de pagamento')->copyable(fn (Receipt $receipt) => $receipt->link),
+
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

@@ -11,28 +11,68 @@ use Flowframe\Trend\TrendValue;
 class SalesChart extends ChartWidget
 {
     protected static ?string $heading = 'Vendas';
+    protected static ?string $description = 'Referência: Este ano.';
+
     protected function getData(): array
     {
 
-        $data = Trend::model(Sale::class)
-            ->between(
-                start: now()->startOfYear(),
-                end: now()->endOfYear(),
-            )
-            ->perMonth()
-            ->sum('value');
+        $activeFilter = $this->filter;
+        $start = now()->startOfMonth();
+        $end = now()->endOfMonth();
+        if ($activeFilter === 'month') {
+            $start = now()->startOfMonth();
+            $end = now()->endOfMonth();
+        }
 
+        if ($activeFilter === 'week') {
+            $start = now()->startOfWeek();
+            $end = now()->endOfWeek();
+        }
 
-        return [
-            'datasets' => [
-                [
-                    'label' => 'Valor em Vendas',
-                    'data' => $data->map(fn (TrendValue $value) => $value->aggregate),
+        if ($activeFilter === 'year') {
+            $start = now()->startOfYear();
+            $end = now()->endOfYear();
+        }
 
+        if ($activeFilter === 'year') {
+            $data = Trend::model(Sale::class)
+                ->between(
+                    start: $start,
+                    end: $end
+                )
+                ->perMonth()
+                ->sum('value');
+
+            return [
+                'datasets' => [
+                    [
+                        'label' => 'Valor em Vendas',
+                        'data' => $data->map(fn (TrendValue $value) => $value->aggregate),
+
+                    ],
                 ],
-            ],
-            'labels' => $data->map(fn (TrendValue $value) => $value->date),
-        ];
+                'labels' => $data->map(fn (TrendValue $value) => $value->date),
+            ];
+        } else {
+            $data = Trend::model(Sale::class)
+                ->between(
+                    start: $start,
+                    end: $end
+                )
+                ->perDay()
+                ->sum('value');
+
+            return [
+                'datasets' => [
+                    [
+                        'label' => 'Valor em Vendas',
+                        'data' => $data->map(fn (TrendValue $value) => $value->aggregate),
+
+                    ],
+                ],
+                'labels' => $data->map(fn (TrendValue $value) => $value->date),
+            ];
+        }
     }
 
     protected function getOptions(): RawJs
@@ -53,12 +93,21 @@ class SalesChart extends ChartWidget
             scales: {
                 y: {
                     ticks: {
-                        callback: (value) => new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL'}).format(value),
+                        callback: (value) => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'BRL'}).format(value),
                     },
                 },
             },
         }
     JS);
+    }
+
+    protected function getFilters(): ?array
+    {
+        return [
+            'month' => 'Este mês',
+            'week' => 'Esta semana',
+            'year' => 'Este ano',
+        ];
     }
 
     protected function getType(): string

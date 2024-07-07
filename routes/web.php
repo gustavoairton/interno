@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\Receipt;
+use Automattic\WooCommerce\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -15,3 +17,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::middleware('api')->post('/api/lead', [\App\Http\Controllers\LeadController::class, 'store']);
+Route::get('/test', function (Request $request) {
+    $fmt = numfmt_create('pt_BR', NumberFormatter::CURRENCY);
+    return view('mail.receipt', ['value' => numfmt_format_currency($fmt, 1000, 'BRL'), 'name' => 'Gustavo']);
+});

@@ -12,6 +12,8 @@ class Receipt extends Model
     protected $fillable = [
         'sale_id',
         'value',
+        'link',
+        'type',
         'created_at',
         'updated_at',
     ];

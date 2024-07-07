@@ -14,6 +14,8 @@ return new class extends Migration
         Schema::create('receipts', function (Blueprint $table) {
             $table->id();
             $table->foreignId('sale_id')->constrained()->onDelete('cascade');
+            $table->string('link')->nullable();
+            $table->string('type')->default('Cartão de Crédito');
             $table->float('value');
             $table->timestamps();
         });
