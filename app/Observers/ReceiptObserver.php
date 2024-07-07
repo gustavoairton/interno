@@ -46,7 +46,7 @@ class ReceiptObserver
             $value = numfmt_format_currency($fmt, $receipt->value, 'BRL');
 
             $mailService = new MailService();
-            $mailService->sendView('(BEXOND) ' . $lead->name . ', seu link para pagamento!', $lead->email, $lead->name, 'mail.receipt', ['link' => $link, 'value' => $value, 'name' => $lead->name], '');
+            $mailService->sendView('(BEXOND) ' . $lead->name . ', seu link para pagamento!', $lead->email, $lead->name, 'mail.payment', ['link' => $link, 'value' => $value, 'name' => $lead->name], '');
         }
     }
 
