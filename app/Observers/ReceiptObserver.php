@@ -17,7 +17,11 @@ class ReceiptObserver
      */
     public function created(Receipt $receipt): void
     {
-        if ($receipt->type == 'Cartão de Crédito') {
+
+        $sale = Sale::find($receipt->sale_id);
+        $lead = Lead::find($sale->lead_id);
+
+        if ($receipt->type == 'Cartão de Crédito' && $lead->email) {
             $woocommerce = new Client(
                 'https://luna.bexond.com',
                 'ck_f5936709157ea9eedb3a24b2c095b9ffae71e0d8',
@@ -38,9 +42,6 @@ class ReceiptObserver
 
             $link = 'https://luna.bexond.com/pay?id=' . $product->id;
             $receipt->update(['link' => $link]);
-
-            $sale = Sale::find($receipt->sale_id);
-            $lead = Lead::find($sale->lead_id);
 
             $fmt = numfmt_create('pt_BR', NumberFormatter::CURRENCY);
             $value = numfmt_format_currency($fmt, $receipt->value, 'BRL');
