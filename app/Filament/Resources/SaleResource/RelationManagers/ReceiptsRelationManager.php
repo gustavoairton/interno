@@ -24,9 +24,10 @@ use Webbingbrasil\FilamentCopyActions\Tables\Actions\CopyAction;
 class ReceiptsRelationManager extends RelationManager
 {
     protected static string $relationship = 'receipts';
-    protected static ?string $relationshipLabel = 'Recebimentos';
-    protected static ?string $label = 'Recebimentos';
-    protected static ?string $title = 'Recebimentos';
+    protected static ?string $relationshipLabel = 'Faturas';
+    protected static ?string $label = 'Fatura';
+    protected static ?string $pluralLabel = 'Faturas';
+    protected static ?string $title = 'Faturas';
 
 
     public function form(Form $form): Form
