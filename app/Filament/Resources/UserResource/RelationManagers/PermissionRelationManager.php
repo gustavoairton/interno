@@ -26,11 +26,11 @@ use Notification;
 
 class PermissionRelationManager extends RelationManager
 {
+
     protected static string $relationship = 'permissions';
     protected static ?string $relationshipLabel = 'Permissões';
     protected static ?string $label = 'Permissões';
     protected static ?string $title = 'Permissões';
-
 
     public function form(Form $form): Form
     {

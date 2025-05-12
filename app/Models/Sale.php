@@ -2,10 +2,13 @@
 
 namespace App\Models;
 
+use App\Observers\SaleObserver;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+#[ObservedBy(SaleObserver::class)]
 class Sale extends Model
 {
     protected $fillable = [
@@ -14,6 +17,15 @@ class Sale extends Model
         'service_id',
         'value'
     ];
+
+    protected $appends = [
+        'total_receipts_value'
+    ];
+
+    public function getTotalReceiptsValueAttribute(): float
+    {
+        return $this->receipts->sum('value');
+    }
 
     public function service(): BelongsTo
     {

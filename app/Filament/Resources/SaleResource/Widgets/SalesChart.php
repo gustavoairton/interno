@@ -5,40 +5,42 @@ namespace App\Filament\Resources\SaleResource\Widgets;
 use App\Models\Sale;
 use Filament\Support\RawJs;
 use Filament\Widgets\ChartWidget;
+use Filament\Widgets\Concerns\InteractsWithPageFilters;
 use Flowframe\Trend\Trend;
 use Flowframe\Trend\TrendValue;
 
 class SalesChart extends ChartWidget
 {
+    use InteractsWithPageFilters;
+
     protected static ?string $heading = 'Vendas';
     protected static ?string $description = 'Referência: Este ano.';
-
     protected function getData(): array
     {
 
-        $activeFilter = $this->filter;
+        $activeFilter = $this->filters['filter'];
         $start = now()->startOfMonth();
         $end = now()->endOfMonth();
         if ($activeFilter === 'month') {
-            $start = now()->startOfMonth();
-            $end = now()->endOfMonth();
+            $start = now()->startOfMonth()->startOfDay();
+            $end = now()->endOfMonth()->endOfDay();
         }
 
-        if ($activeFilter === 'week') {
-            $start = now()->startOfWeek();
-            $end = now()->endOfWeek();
+        if ($activeFilter === '7') {
+            $start = now()->subDays(7)->startOfDay();
+            $end = now()->endOfDay();
         }
 
-        if ($activeFilter === 'year') {
-            $start = now()->startOfYear();
-            $end = now()->endOfYear();
+        if ($activeFilter === '30') {
+            $start = now()->subDays(30)->startOfDay();
+            $end = now()->endOfDay();
         }
 
         if ($activeFilter === 'year') {
             $data = Trend::model(Sale::class)
                 ->between(
                     start: $start,
-                    end: $end
+                    end: now()->endOfYear()
                 )
                 ->perMonth()
                 ->sum('value');
@@ -47,11 +49,30 @@ class SalesChart extends ChartWidget
                 'datasets' => [
                     [
                         'label' => 'Valor em Vendas',
-                        'data' => $data->map(fn (TrendValue $value) => $value->aggregate),
+                        'data' => $data->map(fn(TrendValue $value) => $value->aggregate),
 
                     ],
                 ],
-                'labels' => $data->map(fn (TrendValue $value) => $value->date),
+                'labels' => $data->map(fn(TrendValue $value) => $value->date),
+            ];
+        } else if ($activeFilter === '90') {
+            $data = Trend::model(Sale::class)
+                ->between(
+                    start: now()->subDays(90)->startOfDay(),
+                    end: now()->endOfDay()
+                )
+                ->perMonth()
+                ->sum('value');
+
+            return [
+                'datasets' => [
+                    [
+                        'label' => 'Valor em Vendas',
+                        'data' => $data->map(fn(TrendValue $value) => $value->aggregate),
+
+                    ],
+                ],
+                'labels' => $data->map(fn(TrendValue $value) => $value->date),
             ];
         } else {
             $data = Trend::model(Sale::class)
@@ -66,11 +87,11 @@ class SalesChart extends ChartWidget
                 'datasets' => [
                     [
                         'label' => 'Valor em Vendas',
-                        'data' => $data->map(fn (TrendValue $value) => $value->aggregate),
+                        'data' => $data->map(fn(TrendValue $value) => $value->aggregate),
 
                     ],
                 ],
-                'labels' => $data->map(fn (TrendValue $value) => $value->date),
+                'labels' => $data->map(fn(TrendValue $value) => $value->date),
             ];
         }
     }
@@ -99,15 +120,6 @@ class SalesChart extends ChartWidget
             },
         }
     JS);
-    }
-
-    protected function getFilters(): ?array
-    {
-        return [
-            'month' => 'Este mês',
-            'week' => 'Esta semana',
-            'year' => 'Este ano',
-        ];
     }
 
     protected function getType(): string

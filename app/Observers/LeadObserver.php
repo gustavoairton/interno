@@ -8,7 +8,5 @@ use App\Models\Sale;
 class LeadObserver
 {
 
-    public function updated(Lead $lead): void
-    {
-    }
+    public function updated(Lead $lead): void {}
 }

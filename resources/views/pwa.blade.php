@@ -6,6 +6,20 @@
     position: absolute;
     top: 0;
     right: 0;
+    background-color: #101010;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: -1;
+
+}</style>
+
+<!--<style>
+    :is(.dark .fi-body)::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
     background-image: radial-gradient(
         ellipse at top right,
         rgba(var(--primary-950), 1) 0%,
@@ -29,4 +43,4 @@
     -webkit-backdrop-filter: blur(3px);
 }
 
-    </style>
+    </style>-->

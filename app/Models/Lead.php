@@ -18,7 +18,8 @@ class Lead extends Model
         'texto',
         'status',
         'value',
-        'user_id'
+        'user_id',
+        'converted_at'
     ];
 
     public function sales(): HasMany
@@ -30,5 +31,4 @@ class Lead extends Model
     {
         return $this->belongsTo(User::class);
     }
-
 }

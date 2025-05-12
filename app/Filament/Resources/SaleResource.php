@@ -77,8 +77,8 @@ class SaleResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                SelectFilter::make('service_id')->label('Serviço')->options(fn () => Service::pluck('name', 'id')),
-                SelectFilter::make('user_id')->label('Colaborador')->options(fn () => User::pluck('name', 'id')),
+                SelectFilter::make('service_id')->label('Serviço')->options(fn() => Service::pluck('name', 'id')),
+                SelectFilter::make('user_id')->label('Colaborador')->options(fn() => User::pluck('name', 'id')),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
@@ -94,7 +94,7 @@ class SaleResource extends Resource
     public static function getRelations(): array
     {
         return [
-            ReceiptsRelationManager::class,
+            ReceiptsRelationManager::class
         ];
     }
 

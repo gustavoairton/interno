@@ -24,10 +24,10 @@ use Webbingbrasil\FilamentCopyActions\Tables\Actions\CopyAction;
 class ReceiptsRelationManager extends RelationManager
 {
     protected static string $relationship = 'receipts';
-    protected static ?string $relationshipLabel = 'Faturas';
-    protected static ?string $label = 'Fatura';
-    protected static ?string $pluralLabel = 'Faturas';
-    protected static ?string $title = 'Faturas';
+    protected static ?string $relationshipLabel = 'Recebimentos';
+    protected static ?string $label = 'Recebimenoto';
+    protected static ?string $pluralLabel = 'Recebimentos';
+    protected static ?string $title = 'Recebimentos';
 
 
     public function form(Form $form): Form
@@ -38,10 +38,6 @@ class ReceiptsRelationManager extends RelationManager
                     ->label('Valor')
                     ->required()
                     ->maxLength(255),
-                Forms\Components\Select::make('type')->label('Tipo')->options([
-                    'Cartão de Crédito' => 'Cartão de Crédito',
-                    'PIX' => 'PIX',
-                ]),
             ]);
     }
 
@@ -59,8 +55,8 @@ class ReceiptsRelationManager extends RelationManager
         return $table
             ->recordTitleAttribute('id')
             ->columns([
-                Tables\Columns\TextColumn::make('id'),
-                Tables\Columns\TextColumn::make('value')->label('Valor')->money('BRL')->summarize(Sum::make('value')->label('Valor Total')->money('BRL')),
+                Tables\Columns\TextColumn::make('id')->label('#'),
+                Tables\Columns\TextColumn::make('value')->label('Valor')->money('BRL')->summarize(Sum::make('value')->label('Valor Recebido')->money('BRL')),
             ])
             ->filters([
                 //
@@ -81,7 +77,7 @@ class ReceiptsRelationManager extends RelationManager
                 }),
             ])
             ->actions([
-                CopyAction::make()->label('Copiar link de pagamento')->copyable(fn (Receipt $receipt) => $receipt->link),
+                //CopyAction::make()->label('Copiar link de pagamento')->copyable(fn(Receipt $receipt) => $receipt->link),
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
             ])

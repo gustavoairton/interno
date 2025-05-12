@@ -27,10 +27,10 @@ class ReceiptResource extends Resource
     protected static ?string $navigationIcon = 'heroicon-o-currency-dollar';
     protected static ?bool $readOnly = true;
 
-    public static function canViewAny(): bool
+    public static function canAccess(): bool
     {
         $user = User::find(auth()->user()->id);
-        return $user->hasPermission('recebimento');
+        return false;
     }
 
 
@@ -69,7 +69,7 @@ class ReceiptResource extends Resource
             ])
             ->actions([
                 Tables\Actions\ViewAction::make()->color('success'),
-                CopyAction::make()->label('Copiar link de pagamento')->copyable(fn (Receipt $receipt) => $receipt->link),
+                CopyAction::make()->label('Copiar link de pagamento')->copyable(fn(Receipt $receipt) => $receipt->link),
 
             ])
             ->bulkActions([

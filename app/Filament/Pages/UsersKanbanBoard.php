@@ -9,9 +9,13 @@ use Filament\Notifications\Notification;
 use Illuminate\Support\Collection;
 use Mokhosh\FilamentKanban\Pages\KanbanBoard;
 use App\Filament\Resources\LeadResource\Pages;
+use App\Models\Sale;
 use App\Models\User;
 use Filament\Forms;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Form;
+use Filament\Notifications\Actions\Action;
+use Filament\Pages\Dashboard\Concerns\HasFiltersForm;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -31,6 +35,32 @@ class UsersKanbanBoard extends KanbanBoard
     protected string $editModalTitle = 'Editar Lead';
     protected string $editModalCancelButtonLabel = 'Cancelar';
     protected string $editModalSaveButtonLabel = 'Salvar';
+
+
+    use HasFiltersForm;
+
+    public function filtersForm(Form $form): Form
+    {
+        return $form
+            ->schema([
+                Select::make('filter')
+                    ->label('Filtrar por Período')
+                    ->options([
+                        'month' => 'Este Mês',
+                        'year' => 'Este Ano',
+                        '7' => 'Últimos 7 dias',
+                        '30' => 'Últimos 30 dias',
+                        '90' => 'Últimos 90 dias',
+                    ])
+                    ->default('month')->columnStart(5)->hiddenLabel(),
+            ])->columns(5);
+    }
+
+    protected function getTableQuery(): Builder
+    {
+        $user = User::find(auth()->user()->id);
+        return parent::getTableQuery()->where('user_id', $user->id);
+    }
 
     public static function canAccess(): bool
     {
@@ -97,7 +127,20 @@ class UsersKanbanBoard extends KanbanBoard
 
         $lead = Lead::find($recordId);
 
+        if ($status === 'Negócio Fechado') {
+            $lead->update([
+                'converted_at' => now(),
+            ]);
+        } else {
+            if ($lead->converted_at) {
+                $lead->update([
+                    'converted_at' => null,
+                ]);
+            }
+        }
+
         $lead->update(['status' => $status]);
+
         Notification::make()->success()->title('Estado do Lead alterado para ' . $status . '.')->send();
     }
 }

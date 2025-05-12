@@ -33,15 +33,12 @@ class AdminPanelProvider extends PanelProvider
             ->path('/')
             ->login()
             ->colors([
-                'primary' => Color::Blue,
+                'primary' => Color::Stone,
             ])
-            ->brandLogo('image/blacklogo.png')
-            ->darkModeBrandLogo('image/whitelogo.png')
+            ->darkModeBrandLogo(asset('image/logo.png'))
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')
-            ->pages([
-                Pages\Dashboard::class,
-            ])
+            ->pages([])
             ->sidebarCollapsibleOnDesktop(true)
             ->darkMode(true)
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\\Filament\\Widgets')
@@ -67,7 +64,8 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->renderHook(
                 PanelsRenderHook::HEAD_END,
-                fn () => view('pwa'),
-            );
+                fn() => view('pwa'),
+            )
+            ->maxContentWidth('full');
     }
 }

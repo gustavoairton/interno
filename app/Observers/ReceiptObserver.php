@@ -18,7 +18,7 @@ class ReceiptObserver
     public function created(Receipt $receipt): void
     {
 
-        $sale = Sale::find($receipt->sale_id);
+        /*$sale = Sale::find($receipt->sale_id);
         $lead = Lead::find($sale->lead_id);
 
         if ($receipt->type == 'Cartão de Crédito' && $lead->email) {
@@ -48,7 +48,7 @@ class ReceiptObserver
 
             $mailService = new MailService();
             $mailService->sendView('(BEXOND) ' . $lead->name . ', seu link para pagamento!', $lead->email, $lead->name, 'mail.payment', ['link' => $link, 'value' => $value, 'name' => $lead->name], '');
-        }
+        }*/
     }
 
     /**
